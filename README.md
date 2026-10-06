@@ -1,150 +1,110 @@
-# LangChain- Develop AI Agents with LangChain & LangGraph 🦜🔗
+# LangChain- Develop AI Agents with LangChain & LangGraph 🦜
 
-**Learn LangChain and LangGraph by building real world AI Agents (Python, Latest Version V.1.0+)**
+Building an AI agent from scratch to understand how the ReAct loop and tool calling really work, using Ollama, OpenAI and LangSmith tracing.
 
-This course is designed to teach you how to QUICKLY harness the power of the LangChain library for LLM applications. Build 3 end-to-end working LangChain based generative AI applications with no fluff, no toy examples - just real projects using real APIs and real-world skills.
+# Agents Under the Hood
 
-![LangChain Logo](/static/LangChain_OSS%20Lockup_light.png)
-![LangGraph Logo](/static/LangGraph_OSS%20Lockup_light.png)
+Building an AI agent **from scratch** to understand what really happens inside one: no black boxes. Instead of relying only on ready-made agent helpers, this project implements the core agent loop step by step: reasoning, tool calling and observing results.
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/EdenMarco177?style=social)](https://twitter.com/EdenMarco177)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+## What this project covers
 
-[![udemy](https://img.shields.io/badge/LangChain%20Udemy%20Course%20Coupon%20%2412.99-brightgreen)](https://www.udemy.com/course/langchain/?couponCode=JULY-2026)
+- How a **ReAct agent** (Reason + Act) works internally
+- How **tool calling** works: the model returns a structured request, and the code runs the tool
+- How the **message history** (`HumanMessage`, `AIMessage`, `ToolMessage`) drives each step
+- Running the same agent on a **local model (Ollama)** and a **cloud model (OpenAI)**
+- **Tracing** every step with LangSmith to see exactly what the agent did
 
+## How the agent loop works
 
+```
+1. User asks a question
+        ↓
+2. Model reasons: answer directly, or call a tool?
+        ↓
+3. If tool call → run the tool → add the result as a ToolMessage
+        ↓
+4. Send the updated history back to the model
+        ↓
+5. Repeat until the model gives a final answer
+```
 
-## 💡 What You'll Build 
+## Tech stack
 
-This course takes you through building 7 real-world AI agent projects, from simple hello-world applications to advanced agentic systems:
+| Tool | Purpose |
+|---|---|
+| LangChain | Messages, tools and model interfaces |
+| Ollama ([Llama 3.2]) | Local model: free, offline, private |
+| OpenAI API | Cloud model, for comparison |
+| LangSmith | Tracing and debugging each agent step |
+| uv | Python package and project manager |
+| python-dotenv | Loads API keys from `.env` |
 
-| Project | Type | Description |
-|---------|------|-------------|
-| 👋 [LangChain Hello World](https://github.com/emarco177/langchain-course/tree/project/hello-world) | Branch (`project/hello-world`) | Your first AI agent - basic structure and LLM integration |
-| 🔎  [Modern Search Agent](https://github.com/emarco177/ice_breaker/tree/project/search-agent) | Branch (`project/search-agent`) | Build search agents using LangChain v.1's `create_agent` interface with custom tools, Tavily integration, and structured outputs |
-| 🧠 [Agents Under The Hood](https://github.com/emarco177/langchain-course/tree/project/agents-under-the-hood) | Branch (`project/agents-under-the-hood`) | Understanding reasoning and acting patterns in AI agents |
-| 📄 [RAG Gist](https://github.com/emarco177/langchain-course/tree/project/rag-gist) | Branch (`project/rag-gist`) | The gist of retrieval-augmented generation |
-| 📚 [Documentation Helper](https://github.com/emarco177/documentation-helper) | External Repo | Intelligent documentation assistant |
-| 💻 [Code Interpreter](https://github.com/emarco177/langchain-course/tree/project/code-interpreter) | Branch (`project/code-interpreter`) | AI-powered code execution and analysis |
-| 🪞 [Reflection Agent](https://github.com/emarco177/langgraph-course/tree/project/reflection-agent) | External Repo | Self-improving agent with reflection and critique capabilities |
-| 🔄 [Reflexion Agent](https://github.com/emarco177/langgraph-course/tree/project/reflexion-agent) | External Repo | Advanced self-correcting agent using reflexion techniques |
-| 🤖 [Agentic RAG](https://github.com/emarco177/langgraph-course/tree/project/agentic-rag) | External Repo | Advanced retrieval-augmented generation system |
+## Prerequisites
 
-## 📚 Course Highlights 
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/)
+- [Ollama](https://ollama.com/download), installed and running
+- An [OpenAI API key](https://platform.openai.com/api-keys)
+- A [LangSmith API key](https://smith.langchain.com/)
 
-- **7 Complete Projects** - From beginner to advanced implementations including Ice Breaker, Documentation Helper, and Code Interpreter
-- **Real-World Applications** - Build agents that solve actual problems with live APIs
-- **Modern Tech Stack** - LangChain v0.3+, LangGraph, Pinecone, FAISS, Streamlit
-- **Practical Skills** - Learn RAG, vector databases, prompt engineering, and agent workflows
-- **Interactive Learning** - Follow commits chronologically for step-by-step learning
+## Setup
 
-## 🤔 Learning Path 
+**1. Clone and install**
 
-### Phase 1: Foundations
-1. **Hello World Chain** - Basic agent structure and LLM integration
-2. **Code Interpreter** - Tool calling and code execution capabilities
+```bash
+git clone https://github.com/Tumuluri007/Agents_under_the_hood.git
+cd Agents_under_the_hood
+uv sync
+```
 
-### Phase 2: Real-World Applications
-3. **Ice Breaker** - Data collection and social media integration
-4. **Documentation Helper** - RAG implementation and knowledge management
+**2. Download the local model**
 
-### Phase 3: Advanced Concepts
-5. **Blog Analyzer** - Multi-step reasoning and content analysis
-6. **Agentic RAG** - Self-correcting agents with memory and planning
+```bash
+ollama pull llama3.2
+```
 
-## ▶️ Getting Started 
+**3. Create a `.env` file** in the project folder:
 
-### 🛠️ Prerequisites 
-- **This is not a beginner course** - Basic software engineering concepts needed
-- Familiarity with: git, Python, environment variables, classes, testing and debugging
-- Python 3.10+
-- Any Python package manager (uv, poetry, pipenv) - but NOT conda!
-- Access to an LLM (can be open source via Ollama, or cloud providers like OpenAI, Anthropic, Gemini)
-- No Machine Learning experience needed
+```
+OPENAI_API_KEY=your-openai-key
+LANGSMITH_API_KEY=your-langsmith-key
+LANGSMITH_TRACING=true
+LANGSMITH_PROJECT=agents-under-the-hood
+```
 
-### ⚙️ Setup Instructions 
+`.env` is listed in `.gitignore`, so your keys are never uploaded.
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/emarco177/langchain-course
-   cd langchain-course
-   ```
-2. **Choose your learning path**
-   
-   **For branch-based projects:**
-   ```bash
-   # Start with Hello World
-   git checkout project/hello-world
-   uv sync
-   uv run python main.py
-   
-   # Progress to Code Interpreter
-   git checkout project/code-interpreter
-   uv sync
-   uv run python main.py
-   ```
-   
-   **For external repository projects:**
-   ```bash
-   # Clone specific project repositories
-   git clone https://github.com/emarco177/ice_breaker
-   cd ice_breaker
-   # Follow project-specific setup instructions
-   ```
+## Run it
 
-3. **Follow the commits**
-   - Each commit represents a lesson or feature implementation
-   - Use `git log --oneline` to see the learning progression
-   - Checkout previous commits to understand the development process
+```bash
+uv run main.py
+```
 
-**External Projects:**
-- [Ice Breaker](https://github.com/emarco177/ice_breaker) - Social media profile analyzer
-- [Medium Analyzer](https://github.com/emarco177/blog-analyzer) - Content analysis and insights generator
-- [Documentation Helper](https://github.com/emarco177/documentation-helper) - AI documentation assistant
-- [Reflection Agent](https://github.com/emarco177/langgraph-course/tree/project/reflection-agent) - Self-improving agent with reflection and critique capabilities
-- [Reflexion Agent](https://github.com/emarco177/langgraph-course/tree/project/reflexion-agent) - Advanced self-correcting agent using reflexion techniques
-- [Agentic RAG](https://github.com/emarco177/langgraph-course/tree/project/agentic-rag) - Advanced retrieval-augmented generation system
+Then open [LangSmith](https://smith.langchain.com/) to see the full trace: every model call, tool call and result.
 
+## Switching between models
 
-## 📚 Learning Objectives 
+| Model | Runs on | Cost | Notes |
+|---|---|---|---|
+| Ollama (Llama 3.2) | Your computer | Free | Works offline; slower on a basic CPU |
+| OpenAI | Cloud | Paid per use | Faster, and more reliable at tool calling |
 
-By the end of this course, you'll be able to:
+## Key concepts learned
 
-- Build AI agents from scratch using modern frameworks
-- Implement tool calling and external API integrations
-- Create RAG systems with vector databases
-- Design multi-step reasoning workflows
-- Deploy agents to production environments
-- Handle error correction and self-improvement in agents
-- Optimize agent performance and cost efficiency
+- **Tools**: Python functions the model can ask to run (`@tool`)
+- **Tool calling**: the model replies with a tool name and inputs instead of an answer
+- **Agent loop**: think, act, observe, repeat until done
+- **Tracing**: seeing inside the agent with LangSmith to debug its decisions
+- **Local vs cloud models**: the trade-offs between privacy, cost and quality
 
+## Project structure
 
-
-
-
-## 🙏 Acknowledgements 
-
-Big thanks to the **LangChain / LangGraph** team and their excellent [documentation and tutorials](https://langchain-ai.github.io/langgraph/tutorials/introduction/) that make this course possible.
-
-## 🌟 Support
-
-If you find this project helpful, please consider:
-- ⭐ Starring the repository
-- 🐛 Reporting issues
-- 💡 Contributing improvements
-- 📢 Sharing with others
-
----
-
-<div align="center">
-
-### 🔗 Connect with Me
-
-[![Portfolio](https://img.shields.io/badge/Portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://www.udemy.com/course/langchain/?referralCode=D981B8213164A3EA91AC)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/eden-marco/)
-[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/EdenEmarco177)
-
-**Built with ❤️ by Eden Marco**
-
-</div>
+```
+Agents_under_the_hood/
+├── main.py          # Agent loop, tools and model setup
+├── pyproject.toml   # Dependencies
+├── uv.lock          # Exact package versions
+├── .gitignore       # Keeps .env and .venv out of Git
+└── README.md
+```
 
